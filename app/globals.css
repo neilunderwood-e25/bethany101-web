@@ -1,26 +1,98 @@
 @import "tailwindcss";
 
+/*
+ * Brand tokens. Reference these from components via
+ * `bg-[var(--brand-primary)]`, `text-[var(--text-default)]`, etc.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Site-wide section background — the villa cream. */
+  --background: #f4f4ea;
+  --foreground: #141414;
+
+  --brand-primary: #0066cc;
+  --brand-primary-hover: #004c99;
+  --text-default: #141414;
+  --text-muted: #6a6a6a;
+  --bg-muted: #f5f5f5;
+
+  /* Hero (VillaBliss) — dark-brown band + 35% image overlay. */
+  --hero-bg: #26180f;
+  --hero-overlay: #26180f;
+
+  /* Info section */
+  --info-heading: #26180f; /* Cormorant heading */
+  --info-text: #514941; /* body copy */
+  --info-divider: #d6d4c9; /* amenities hairlines */
+
+  /* Features section */
+  --features-text: #ebe7dc; /* card body copy on the dark band */
+
+  /* Header / nav */
+  --header-bg: #f4f4ea; /* cream bar */
+  --header-fg: #26180f; /* active link, logo, button */
+  --header-fg-muted: #49382c; /* inactive links */
+  --header-accent: #fdd17c; /* mobile hamburger button */
+}
+
+/* Hero entrance animations (match the Framer template's on-load motion):
+   the background image fades in with a slow zoom-out, the wordmark rises + fades. */
+@keyframes hero-image-in {
+  from {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes hero-word-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-hero-image],
+  [data-hero-word] {
+    animation: none !important;
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Body font → `font-sans` utility. */
+  --font-sans: var(--font-outfit), "Outfit Placeholder", sans-serif;
+  /* Heading font → `font-mono` utility (Cormorant is a serif; mapped here per spec). */
+  --font-mono: var(--font-cormorant), "Cormorant Placeholder", serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-outfit), "Outfit Placeholder", sans-serif;
+}
+
+/* Headings use Cormorant (serif); body copy uses Outfit (sans-serif). Applied
+   at the element level so every h1–h6 / p / span is styled by default, with
+   generic fallbacks so text stays legible if a webfont fails to load. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-cormorant), "Cormorant Placeholder", serif;
+}
+
+p,
+span {
+  font-family: var(--font-outfit), "Outfit Placeholder", sans-serif;
 }

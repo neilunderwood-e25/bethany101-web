@@ -69,9 +69,11 @@ export function HeroDefault({ section }: HeroDefaultProps) {
         <h1
           data-hero-word
           className="whitespace-nowrap text-center font-semibold text-[var(--header-bg)] [animation:hero-word-in_0.9s_ease-out_0.15s_both]"
+          // Fluid constants scaled ×0.786 from the original 10-glyph wordmark
+          // so the wider "Bethany 101" spans the same edge-to-edge width.
           style={{
-            fontSize: "calc(24.8366vw - 6.863px)",
-            lineHeight: "calc(18.3007vw + 8.627px)",
+            fontSize: "calc(19.5354vw - 5.398px)",
+            lineHeight: "calc(14.3935vw + 6.785px)",
           }}
         >
           {heading}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import type { HeaderData } from "@/lib/contentful/header";
@@ -67,6 +67,22 @@ export function Header({ header }: { header: HeaderData }) {
   const hasCta = !!ctaLabel;
   const bookHref = ctaHref || "#";
 
+  // "Stuck" detection for the sticky bar: a zero-height sentinel sits directly
+  // above the <header> in flow; once it scrolls out of the viewport the header
+  // is pinned, and we fade in a subtle drop shadow.
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const [stuck, setStuck] = useState(false);
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setStuck(!entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, []);
+
   // While the mobile menu is open, close on Escape and lock body scroll.
   useEffect(() => {
     if (!open) return;
@@ -83,10 +99,18 @@ export function Header({ header }: { header: HeaderData }) {
   }, [open]);
 
   return (
-    // Sticky: on the homepage the bar scrolls up with the hero until it
-    // reaches the viewport top, then pins there; on other pages it starts at
-    // the top and pins immediately.
-    <header className="sticky top-0 z-50 bg-[var(--header-bg)]">
+    <>
+      {/* Sentinel for stuck detection (must be a flow sibling above the bar). */}
+      <div ref={sentinelRef} aria-hidden className="h-0" />
+      {/* Sticky: on the homepage the bar scrolls up with the hero until it
+          reaches the viewport top, then pins there; on other pages it starts
+          at the top and pins immediately. A subtle brand-brown shadow fades in
+          while pinned. */}
+      <header
+        className={`sticky top-0 z-50 bg-[var(--header-bg)] transition-shadow duration-300 ${
+          stuck ? "shadow-[0_4px_16px_rgba(38,24,15,0.10)]" : "shadow-none"
+        }`}
+      >
       {/* ---- Desktop bar (≥ lg) ---- */}
       <div className="hidden justify-center px-[70px] lg:flex">
         <div className="w-full max-w-[1780px] px-[30px]">
@@ -205,7 +229,8 @@ export function Header({ header }: { header: HeaderData }) {
           </Link>
         )}
       </div>
-    </header>
+      </header>
+    </>
   );
 }
 

@@ -86,7 +86,10 @@ export function FeaturesDefault({ section }: FeaturesDefaultProps) {
                     />
                   </div>
                 )}
-                <h3 className="font-semibold text-[26px] leading-[26px] text-white lg:text-[34px] lg:leading-[34px]">
+                {/* Titles scale with the fluid column width so they keep to
+                    one line (and cards stay aligned) at every desktop width;
+                    body copy stays at the design's fixed size and reflows. */}
+                <h3 className="font-semibold text-[26px] leading-[26px] text-white lg:text-[min(1.770833vw,34px)] lg:leading-[min(1.770833vw,34px)]">
                   {item.title}
                 </h3>
                 {item.body && (

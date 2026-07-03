@@ -1,0 +1,20 @@
+# Netlify configuration for this Next.js (SSR) app.
+#
+# The site is fully dynamic (catch-all FlexiblePage route, force-dynamic), so
+# it must be served by Netlify's Next.js Runtime — a plain static publish will
+# 404 on every path.
+#
+# Required environment variables (Site configuration → Environment variables):
+#   CONTENTFUL_SPACE_ID
+#   CONTENTFUL_DELIVERY_TOKEN
+#   CONTENTFUL_ENVIRONMENT        (master)
+#   CONTENTFUL_PREVIEW_TOKEN      (optional — preview mode only)
+# Do NOT add CONTENTFUL_MANAGEMENT_TOKEN — the runtime never uses it, and the
+# write-scope token should not live in deploy infrastructure.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
